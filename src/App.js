@@ -16,7 +16,7 @@ function App() {
                 webex.ready().then(() => {
                     return webex.getUser();
                 }).then(user => {
-                    setEmail(user?.email || 'test@example.com');
+                    setEmail(user?.email || 'admin@cho010105-6xnw.wbx.ai');
                 }).catch(err => {
                     console.error('Webex SDK 초기화 실패:', err);
                 });
@@ -31,7 +31,7 @@ function App() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 // email,
-                email: email || 'test@example.com',
+                email: email || 'admin@cho010105-6xnw.wbx.ai',
                 date: selectedDate,
                 event: eventText
             })
