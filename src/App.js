@@ -26,7 +26,7 @@ function App() {
 
 
     const handleSave = async () => {
-        await fetch('http://localhost:4000/api/events', {
+        await fetch('https://812b-210-119-237-103.ngrok-free.app/api/events', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
