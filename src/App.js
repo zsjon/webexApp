@@ -150,7 +150,7 @@ function App() {
         if (mode === 'return') {
             // 반납 모드 처리
             try {
-                const res = await fetch('https://6c0e-210-119-237-103.ngrok-free.app/api/return', {
+                const res = await fetch('https://7b6b-220-118-114-121.ngrok-free.app/api/return', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email })
@@ -176,7 +176,7 @@ function App() {
             formData.append('image', selectedImage);
 
             try {
-                const res = await fetch('https://6c0e-210-119-237-103.ngrok-free.app/api/pm-adjusted', {
+                const res = await fetch('https://7b6b-220-118-114-121.ngrok-free.app/api/pm-adjusted', {
                     method: 'POST',
                     body: formData
                 });
