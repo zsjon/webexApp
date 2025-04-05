@@ -74,7 +74,7 @@ function App() {
 
         if (mode === 'return') {
             try {
-                const res = await fetch('https://813c-210-102-180-54.ngrok-free.app/api/return', {
+                const res = await fetch('https://345c-175-214-62-79.ngrok-free.app/api/return', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, latitude: coords.latitude, longitude: coords.longitude })
@@ -97,7 +97,7 @@ function App() {
             formData.append('image', selectedImage);
 
             try {
-                const res = await fetch('https://813c-210-102-180-54.ngrok-free.app/api/pm-adjusted', {
+                const res = await fetch('https://345c-175-214-62-79.ngrok-free.app/api/pm-adjusted', {
                     method: 'POST',
                     body: formData
                 });
