@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/webexApp/static/js/main.e04e71cc.js",
+    "main.js": "/webexApp/static/js/main.fa993679.js",
     "index.html": "/webexApp/index.html",
-    "main.e04e71cc.js.map": "/webexApp/static/js/main.e04e71cc.js.map"
+    "main.fa993679.js.map": "/webexApp/static/js/main.fa993679.js.map"
   },
   "entrypoints": [
-    "static/js/main.e04e71cc.js"
+    "static/js/main.fa993679.js"
   ]
 }
