@@ -29,24 +29,29 @@ function App() {
         }, 100);
     }, []);
 
-    // 위치 정보 가져오기
-    const handleGetLocation = () => {
-        if (!navigator.geolocation) {
-            alert('위치 정보 사용이 불가능합니다.');
-            return;
-        }
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                setCoords({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                });
-            },
-            err => {
-                console.error('❌ 위치 정보 오류:', err);
-                alert('위치 정보를 가져오지 못했습니다.');
+    // 위치 정보 가져오기 (Promise로 리팩토링)
+    const getCurrentLocation = () => {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                alert('위치 정보 사용이 불가능합니다.');
+                return reject(new Error('Geolocation not supported'));
             }
-        );
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const location = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+                    setCoords(location);
+                    resolve(location);
+                },
+                err => {
+                    console.error('❌ 위치 정보 오류:', err);
+                    alert('위치 정보를 가져오지 못했습니다.');
+                    reject(err);
+                }
+            );
+        });
     };
 
     // 요청 목록 불러오기 (10초마다)
@@ -60,7 +65,7 @@ function App() {
             const webex = new window.Webex.EmbeddedAppSdk();
             await webex.ready();
             const { spaceId } = await webex.getSpaceId();
-            const res = await fetch(`https://813c-210-102-180-54.ngrok-free.app/api/requests?roomId=${spaceId}`);
+            const res = await fetch(`https://bba6-210-102-180-54.ngrok-free.app/api/requests?roomId=${spaceId}`);
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -74,10 +79,15 @@ function App() {
 
         if (mode === 'return') {
             try {
-                const res = await fetch('https://345c-175-214-62-79.ngrok-free.app/api/return', {
+                const location = await getCurrentLocation(); // 위치 먼저 확보
+                const res = await fetch('https://bba6-210-102-180-54.ngrok-free.app/api/return', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, latitude: coords.latitude, longitude: coords.longitude })
+                    body: JSON.stringify({
+                        email,
+                        latitude: location.latitude,
+                        longitude: location.longitude
+                    })
                 });
                 if (!res.ok) throw new Error();
                 alert('✅ 반납 알림이 전송되었습니다!');
@@ -97,7 +107,7 @@ function App() {
             formData.append('image', selectedImage);
 
             try {
-                const res = await fetch('https://345c-175-214-62-79.ngrok-free.app/api/pm-adjusted', {
+                const res = await fetch('https://bba6-210-102-180-54.ngrok-free.app/api/pm-adjusted', {
                     method: 'POST',
                     body: formData
                 });
@@ -123,20 +133,20 @@ function App() {
 
             {mode === 'adjust' && (
                 <>
-          <textarea
-              placeholder="PM 상태 설명"
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-              rows={3}
-              style={{ width: '100%', marginBottom: '1rem' }}
-          />
+                    <textarea
+                        placeholder="PM 상태 설명"
+                        value={message}
+                        onChange={e => setMessage(e.target.value)}
+                        rows={3}
+                        style={{ width: '100%', marginBottom: '1rem' }}
+                    />
                     <input
                         type="file"
                         accept="image/*"
                         onChange={e => setSelectedImage(e.target.files[0])}
                         style={{ marginBottom: '1rem' }}
                     />
-                    <button onClick={handleGetLocation}>📡 위치 가져오기</button>
+                    <button onClick={getCurrentLocation}>📡 위치 가져오기</button>
                     {coords.latitude && (
                         <p>📍 위도: {coords.latitude}, 경도: {coords.longitude}</p>
                     )}
