@@ -6,7 +6,6 @@ function App() {
     const [mode, setMode] = useState('return');
     const [selectedImage, setSelectedImage] = useState(null);
     const [coords, setCoords] = useState({ latitude: '', longitude: '' });
-    const [message, setMessage] = useState('');
     const [requests, setRequests] = useState([]);
 
     // Webex SDK 초기화
@@ -29,7 +28,7 @@ function App() {
         }, 100);
     }, []);
 
-    // 위치 정보 가져오기 (Promise로 리팩토링)
+    // 위치 정보 가져오기
     const getCurrentLocation = () => {
         return new Promise((resolve, reject) => {
             if (!navigator.geolocation) {
@@ -42,8 +41,8 @@ function App() {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
                     };
-                    setCoords(location); // 여전히 상태로 저장
-                    resolve(location);   // 이걸 API에 직접 쓸 거임!
+                    setCoords(location);
+                    resolve(location);
                 },
                 err => {
                     console.error('❌ 위치 정보 오류:', err);
@@ -54,7 +53,7 @@ function App() {
         });
     };
 
-    // 요청 목록 불러오기 (10초마다)
+    // 요청 목록 주기적 조회
     useEffect(() => {
         const interval = setInterval(fetchRequests, 10000);
         return () => clearInterval(interval);
@@ -79,14 +78,14 @@ function App() {
 
         if (mode === 'return') {
             try {
-                const location = await getCurrentLocation(); // 여기서 값 직접 받아옴
+                const location = await getCurrentLocation();
 
                 const res = await fetch('https://bba6-210-102-180-54.ngrok-free.app/api/return', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         email,
-                        latitude: location.latitude,   // 상태 말고, 이거 직접 사용
+                        latitude: location.latitude,
                         longitude: location.longitude
                     })
                 });
@@ -96,18 +95,19 @@ function App() {
                 alert('❌ 반납 요청 실패');
             }
         } else {
-            if (!selectedImage || !coords.latitude || !message) {
-                return alert('모든 항목을 입력해주세요.');
+            if (!selectedImage) {
+                return alert('이미지를 선택해주세요.');
             }
 
-            const formData = new FormData();
-            formData.append('email', email);
-            formData.append('latitude', coords.latitude);
-            formData.append('longitude', coords.longitude);
-            formData.append('message', message);
-            formData.append('image', selectedImage);
-
             try {
+                const location = await getCurrentLocation();
+
+                const formData = new FormData();
+                formData.append('email', email);
+                formData.append('latitude', location.latitude);
+                formData.append('longitude', location.longitude);
+                formData.append('image', selectedImage);
+
                 const res = await fetch('https://bba6-210-102-180-54.ngrok-free.app/api/pm-adjusted', {
                     method: 'POST',
                     body: formData
@@ -134,20 +134,12 @@ function App() {
 
             {mode === 'adjust' && (
                 <>
-                    <textarea
-                        placeholder="PM 상태 설명"
-                        value={message}
-                        onChange={e => setMessage(e.target.value)}
-                        rows={3}
-                        style={{ width: '100%', marginBottom: '1rem' }}
-                    />
                     <input
                         type="file"
                         accept="image/*"
                         onChange={e => setSelectedImage(e.target.files[0])}
                         style={{ marginBottom: '1rem' }}
                     />
-                    <button onClick={getCurrentLocation}>📡 위치 가져오기</button>
                     {coords.latitude && (
                         <p>📍 위도: {coords.latitude}, 경도: {coords.longitude}</p>
                     )}
