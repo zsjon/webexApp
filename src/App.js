@@ -7,6 +7,7 @@ function App() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [coords, setCoords] = useState({ latitude: '', longitude: '' });
     const [requests, setRequests] = useState([]);
+    const [message, setMessage] = useState('');
 
     // Webex SDK 초기화
     useEffect(() => {
@@ -72,6 +73,27 @@ function App() {
         }
     };
 
+
+    useEffect(() => {
+        if (mode === 'adjust') {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    setCoords({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    });
+                },
+                err => {
+                    console.error('❌ 위치 정보 오류:', err);
+                    alert('위치 정보를 가져오지 못했습니다.');
+                }
+            );
+        }
+    }, [mode]);
+
+
+
+
     // 제출 처리
     const handleSubmit = async () => {
         if (!email) return alert('이메일 정보가 없습니다.');
@@ -101,12 +123,13 @@ function App() {
 
             try {
                 const location = await getCurrentLocation();
-
                 const formData = new FormData();
                 formData.append('email', email);
                 formData.append('latitude', location.latitude);
                 formData.append('longitude', location.longitude);
                 formData.append('image', selectedImage);
+                formData.append('message', message || '');  // 빈 값도 허용
+
 
                 const res = await fetch('https://bba6-210-102-180-54.ngrok-free.app/api/pm-adjusted', {
                     method: 'POST',
