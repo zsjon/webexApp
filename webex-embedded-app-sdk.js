@@ -6,7 +6,7 @@
   window.Webex = {
     EmbeddedAppSdk: function() {
       this.ready = () => Promise.resolve();
-      this.getUser = () => Promise.resolve({ email: "admin@fghjk23-7xck.wbx.ai" });
+      this.getUser = () => Promise.resolve({ email: "admin@cho010105-6xnw.wbx.ai" });
     }
   };
 })(window);
