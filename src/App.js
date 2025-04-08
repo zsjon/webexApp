@@ -42,8 +42,8 @@ function App() {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
                     };
-                    setCoords(location);
-                    resolve(location);
+                    setCoords(location); // 여전히 상태로 저장
+                    resolve(location);   // 이걸 API에 직접 쓸 거임!
                 },
                 err => {
                     console.error('❌ 위치 정보 오류:', err);
@@ -79,13 +79,14 @@ function App() {
 
         if (mode === 'return') {
             try {
-                const location = await getCurrentLocation(); // 위치 먼저 확보
+                const location = await getCurrentLocation(); // 여기서 값 직접 받아옴
+
                 const res = await fetch('https://bba6-210-102-180-54.ngrok-free.app/api/return', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         email,
-                        latitude: location.latitude,
+                        latitude: location.latitude,   // 상태 말고, 이거 직접 사용
                         longitude: location.longitude
                     })
                 });
