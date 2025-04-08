@@ -128,7 +128,7 @@ function App() {
                 formData.append('latitude', location.latitude);
                 formData.append('longitude', location.longitude);
                 formData.append('image', selectedImage);
-                formData.append('message', message || '');  // 빈 값도 허용
+                //formData.append('message', message || '');  // 빈 값도 허용
 
 
                 const res = await fetch('https://bba6-210-102-180-54.ngrok-free.app/api/pm-adjusted', {
