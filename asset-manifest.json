@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/KICKSCO_EMBEDDED_APP/static/js/main.aa70ddd8.js",
-    "index.html": "/KICKSCO_EMBEDDED_APP/index.html",
-    "main.aa70ddd8.js.map": "/KICKSCO_EMBEDDED_APP/static/js/main.aa70ddd8.js.map"
+    "main.js": "/kicksco_embedded_app/static/js/main.aa70ddd8.js",
+    "index.html": "/kicksco_embedded_app/index.html",
+    "main.aa70ddd8.js.map": "/kicksco_embedded_app/static/js/main.aa70ddd8.js.map"
   },
   "entrypoints": [
     "static/js/main.aa70ddd8.js"
