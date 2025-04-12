@@ -1,71 +1,66 @@
-# Getting Started with Create React App
+# 🚴‍♂️ Webex Embedded App Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An embedded Webex app that helps manage PM (Personal Mobility) return confirmations and illegal parking notifications using Webex messaging APIs.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📌 Overview
 
-### `npm start`
+This app streamlines communication between users and administrators when a PM is returned or parked illegally. The administrator receives notifications and images via Webex, and users are guided to take corrective action.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🧠 Logic Flow Diagram
 
-### `npm test`
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/21a84532-412a-4d3d-8f57-c43f98aab7fc" width="250"/>
+</p>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🔌 Webex API Used
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [📨 Create a Message API](https://developer.webex.com/docs/api/v1/messages/create-a-message)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🧭 Workflow
 
-### `npm run eject`
+### 1️⃣ User Returns PM
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1ee4fae0-4e05-4a94-8948-3fda0e5d85a2" width="300"/>
+</p>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 1️⃣-1️⃣ Administrator Receives Return Notification
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/be6119c2-2da4-4f81-931a-8eefca454046" width="550"/>
+</p>
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 2️⃣ User Adjusts Illegally Parked PM
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a6a8bd52-6a9e-4a6d-a8e5-3ba0f2a51f2d" width="300"/>
+</p>
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 2️⃣-1️⃣ Administrator Receives Image of Properly Parked PM
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7c86e422-3eb8-4cd2-9261-56a44ca393c8" width="500"/>
+</p>
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## ✅ Features
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Real-time messaging using Webex APIs  
+- PM location verification and communication loop  
+- Simple & intuitive visual feedback using images and messages
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🛠️ Used Techniques
 
-### Analyzing the Bundle Size
+- React
+- Node.js
+- Webex API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# webexApp

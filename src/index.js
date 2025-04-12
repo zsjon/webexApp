@@ -8,3 +8,4 @@ root.render(
         <App />
     </React.StrictMode>
 );
+// 컴포넌트 등록? 메니페스트 파일 같은건가?

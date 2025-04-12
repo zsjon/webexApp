@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -13,7 +13,7 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "homepage": "https://zsjon.github.io/webexApp/",
+  "homepage": "https://zsjon.github.io/kicksco_embedded_app/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
