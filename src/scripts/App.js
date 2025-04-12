@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './App.css';
 
 function App() {
     const [webexReady, setWebexReady] = useState(false);
@@ -7,7 +8,6 @@ function App() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [coords, setCoords] = useState({ latitude: '', longitude: '' });
     const [requests, setRequests] = useState([]);
-    // message 상태는 사용하지 않을 경우 제거할 수 있습니다.
     const [message, setMessage] = useState('');
 
     // Webex SDK 초기화
@@ -66,7 +66,7 @@ function App() {
             const webex = new window.Webex.EmbeddedAppSdk();
             await webex.ready();
             const { spaceId } = await webex.getSpaceId();
-            const res = await fetch(`https://dc7c-58-230-197-51.ngrok-free.app/api/requests?roomId=${spaceId}`);
+            const res = await fetch(`https://98bd-222-107-173-96.ngrok-free.app/api/requests?roomId=${spaceId}`);
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -113,7 +113,7 @@ function App() {
                 formData.append('lat', location.latitude);
                 formData.append('lng', location.longitude);
 
-                const res = await fetch('https://dc7c-58-230-197-51.ngrok-free.app/api/return', {
+                const res = await fetch('https://98bd-222-107-173-96.ngrok-free.app/api/return', {
                     method: 'POST',
                     body: formData
                 });
@@ -138,7 +138,7 @@ function App() {
                 // 필요한 경우, message 필드를 추가할 수 있습니다.
                 // formData.append('message', message);
 
-                const res = await fetch('https://dc7c-58-230-197-51.ngrok-free.app/api/pm-adjusted', {
+                const res = await fetch('https://98bd-222-107-173-96.ngrok-free.app/api/pm-adjusted', {
                     method: 'POST',
                     body: formData
                 });
@@ -152,12 +152,12 @@ function App() {
     };
 
     return (
-        <div style={{ padding: '2rem', maxWidth: 500, margin: 'auto', fontFamily: 'Arial, sans-serif' }}>
-            <h2 style={{ textAlign: 'center' }}>PM {mode === 'return' ? '반납' : '위치 조정'} 시스템</h2>
+        <div className="app-wrapper">
+            <h2 className="app-title">PM {mode === 'return' ? '반납' : '위치 조정'} 시스템</h2>
 
-            <div style={{ marginBottom: '1rem' }}>
-                <label style={{ fontWeight: 'bold' }}>현재 모드:</label>{' '}
-                <select value={mode} onChange={e => setMode(e.target.value)} style={{ padding: '0.5rem', fontSize: '1rem' }}>
+            <div className="app-mode-container">
+                <label className="app-mode-label">현재 모드:</label>{' '}
+                <select className="app-select" value={mode} onChange={e => setMode(e.target.value)}>
                     <option value="return">PM 반납</option>
                     <option value="adjust">PM 위치 조정</option>
                 </select>
@@ -177,7 +177,9 @@ function App() {
             {mode === 'adjust' && (
                 <div style={{ marginBottom: '1rem' }}>
                     {coords.latitude ? (
-                        <p>📍 위도: {parseFloat(coords.latitude).toFixed(5)}, 경도: {parseFloat(coords.longitude).toFixed(5)}</p>
+                        <p>
+                            📍 위도: {parseFloat(coords.latitude).toFixed(5)}, 경도: {parseFloat(coords.longitude).toFixed(5)}
+                        </p>
                     ) : (
                         <p>위치 정보를 가져옵니다...</p>
                     )}
@@ -185,11 +187,11 @@ function App() {
             )}
 
             {mode === 'adjust' && requests.length > 0 && (
-                <div style={{ backgroundColor: '#f0f0f0', padding: '1rem', marginTop: '1rem', borderRadius: '4px' }}>
-                    <h4 style={{ margin: '0 0 0.5rem 0' }}>조정 요청 목록</h4>
-                    <ul style={{ listStyle: 'none', paddingLeft: '0' }}>
+                <div className="app-request-list">
+                    <h4 className="app-request-title">조정 요청 목록</h4>
+                    <ul className="app-request-ul">
                         {requests.map((req, idx) => (
-                            <li key={idx} style={{ padding: '0.3rem 0', borderBottom: '1px solid #ccc' }}>
+                            <li key={idx} className="app-request-li">
                                 {req.text}
                             </li>
                         ))}
@@ -197,22 +199,7 @@ function App() {
                 </div>
             )}
 
-            <button
-                onClick={handleSubmit}
-                disabled={!webexReady}
-                style={{
-                    width: '100%',
-                    marginTop: '2rem',
-                    padding: '0.75rem',
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                    backgroundColor: '#007bff',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                }}
-            >
+            <button onClick={handleSubmit} className="app-submit-button">
                 {mode === 'return' ? '반납 알림 보내기' : '조정 내용 전송'}
             </button>
         </div>

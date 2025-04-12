@@ -1,4 +1,5 @@
-import React, {useRef, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import '../css/User.css';
 
 function User({ user }) {
     const [mode, setMode] = useState('return');
@@ -18,7 +19,7 @@ function User({ user }) {
                 return reject(new Error('Geolocation not supported'));
             }
             navigator.geolocation.getCurrentPosition(
-                position => {
+                (position) => {
                     const location = {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
@@ -26,7 +27,7 @@ function User({ user }) {
                     setCoords(location);
                     resolve(location);
                 },
-                err => {
+                (err) => {
                     console.error('위치 정보 오류:', err);
                     alert('위치 정보를 가져오지 못했습니다.');
                     reject(err);
@@ -39,13 +40,13 @@ function User({ user }) {
     useEffect(() => {
         if (mode === 'adjust') {
             navigator.geolocation.getCurrentPosition(
-                position => {
+                (position) => {
                     setCoords({
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
                     });
                 },
-                err => {
+                (err) => {
                     console.error('❌ 위치 정보 오류:', err);
                     alert('위치 정보를 가져오지 못했습니다.');
                 }
@@ -64,7 +65,7 @@ function User({ user }) {
             const webex = new window.Webex.EmbeddedAppSdk();
             await webex.ready();
             const { spaceId } = await webex.getSpaceId();
-            const res = await fetch(`https://dc7c-58-230-197-51.ngrok-free.app/api/requests?roomId=${spaceId}`);
+            const res = await fetch(`https://98bd-222-107-173-96.ngrok-free.app/api/requests?roomId=${spaceId}`);
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -72,7 +73,7 @@ function User({ user }) {
         }
     };
 
-    // 실시간 카메라 스트리밍 시작
+    // 카메라 스트리밍 시작
     useEffect(() => {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
@@ -135,8 +136,8 @@ function User({ user }) {
             formData.append('lng', location.longitude);
 
             const url = mode === 'return'
-                ? 'https://dc7c-58-230-197-51.ngrok-free.app/api/return'
-                : 'https://dc7c-58-230-197-51.ngrok-free.app/api/pm-adjusted';
+                ? 'https://98bd-222-107-173-96.ngrok-free.app/api/return'
+                : 'https://98bd-222-107-173-96.ngrok-free.app/api/pm-adjusted';
 
             const res = await fetch(url, {
                 method: 'POST',
@@ -152,50 +153,84 @@ function User({ user }) {
     };
 
     return (
-        <div style={{padding: '2rem', maxWidth: 500, margin: 'auto', fontFamily: 'Arial, sans-serif'}}>
-            <div style={{height: '70px', backgroundColor: '#A6DDF4', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2rem', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)'}}>
-                <img src="/kicksco_embedded_app/logo.png" alt="KickSco 로고" style={{width: '64px', height: '64px', borderRadius: '10%', objectFit: 'cover'}} />
+        <div className="user-wrapper">
+            <div className="user-header">
+                <img
+                    className="user-logo"
+                    src="/kicksco_embedded_app/logo.png"
+                    alt="KickSco 로고"
+                />
             </div>
 
-            <div style={{marginBottom: '1rem'}}>
-                <div><label style={{fontWeight: 'bold'}}> 사용자 : </label> <span>{email}</span></div>
-                <div style={{display: 'flex', gap: '1rem', marginTop: '0.5rem'}}>
-                    <button onClick={() => setMode('return')} style={{padding: '0.5rem 1rem', fontSize: '1rem', backgroundColor: mode === 'return' ? '#007bff' : '#e0e0e0', color: mode === 'return' ? '#fff' : '#000', border: 'none', borderRadius: '4px', cursor: 'pointer'}}>PM 반납</button>
-                    <button onClick={() => setMode('adjust')} style={{padding: '0.5rem 1rem', fontSize: '1rem', backgroundColor: mode === 'adjust' ? '#007bff' : '#e0e0e0', color: mode === 'adjust' ? '#fff' : '#000', border: 'none', borderRadius: '4px', cursor: 'pointer'}}>PM 위치 조정</button>
+            <div className="user-info">
+                <div>
+                    <label> 사용자 : </label> <span>{email}</span>
+                </div>
+                <div className="user-mode-buttons">
+                    <button
+                        onClick={() => setMode('return')}
+                        className={`user-mode-button ${mode === 'return' ? 'active' : 'inactive'}`}
+                    >
+                        PM 반납
+                    </button>
+                    <button
+                        onClick={() => setMode('adjust')}
+                        className={`user-mode-button ${mode === 'adjust' ? 'active' : 'inactive'}`}
+                    >
+                        PM 위치 조정
+                    </button>
                 </div>
             </div>
 
-            <div style={{marginBottom: '1rem'}}>
+            <div className="video-container">
                 {!selectedImage && (
-                    <div style={{position: 'relative', width: '320px', height: '240px'}}>
-                        <video ref={videoRef} width="320" height="240" autoPlay playsInline style={{border: '1px solid #ccc', borderRadius: '8px'}} />
-                        <img src="/kicksco_embedded_app/img.png" onClick={handleCapture} style={{position: 'absolute', top: '85%', left: '50%', width: '64px', height: '64px', transform: 'translate(-50%, -50%)', opacity: 0.7, cursor: 'pointer', borderRadius: '50%', border: '2px solid #ddd', boxShadow: '0 2px 6px rgba(0,0,0,0.2)', backgroundColor: '#fff', objectFit: 'cover'}} />
-                    </div>
+                    <>
+                        <video
+                            ref={videoRef}
+                            width="320"
+                            height="240"
+                            autoPlay
+                            playsInline
+                            className="video-player"
+                        />
+                        <img
+                            src="/kicksco_embedded_app/img.png"
+                            onClick={handleCapture}
+                            className="capture-button"
+                            alt="캡처"
+                        />
+                    </>
                 )}
 
                 {selectedImage && (
-                    <div style={{marginTop: '1rem'}}>
-                        <img src={URL.createObjectURL(selectedImage)} alt="Captured" width="320" />
+                    <div className="selected-image-container">
+                        <img
+                            src={URL.createObjectURL(selectedImage)}
+                            alt="Captured"
+                            className="selected-image"
+                        />
                         <br />
-                        <button onClick={handleRetake} style={{marginTop: '0.5rem', padding: '0.5rem 1rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer'}}>재촬영</button>
+                        <button onClick={handleRetake} className="retake-button">
+                            재촬영
+                        </button>
                     </div>
                 )}
 
-                <canvas ref={canvasRef} width="320" height="240" style={{display: 'none'}} />
+                <canvas ref={canvasRef} width="320" height="240" style={{ display: 'none' }} />
             </div>
 
             {mode === 'adjust' && requests.length > 0 && (
-                <div style={{backgroundColor: '#f0f0f0', padding: '1rem', marginTop: '1rem', borderRadius: '4px'}}>
-                    <h4 style={{margin: '0 0 0.5rem 0'}}>조정 요청 목록</h4>
-                    <ul style={{listStyle: 'none', paddingLeft: '0'}}>
+                <div className="user-request-list">
+                    <h4>조정 요청 목록</h4>
+                    <ul>
                         {requests.map((req, idx) => (
-                            <li key={idx} style={{padding: '0.3rem 0', borderBottom: '1px solid #ccc'}}>{req.text}</li>
+                            <li key={idx}>{req.text}</li>
                         ))}
                     </ul>
                 </div>
             )}
 
-            <button onClick={handleSubmit} style={{width: '100%', marginTop: '2rem', padding: '0.75rem', fontWeight: 'bold', fontSize: '1rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer'}}>
+            <button onClick={handleSubmit} className="user-submit-button">
                 전송
             </button>
         </div>

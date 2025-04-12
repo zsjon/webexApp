@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import AdminApp from './Admin'; //
-import UserApp from './User';   //
+import AdminApp from './scripts/Admin';
+import UserApp from './scripts/User';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

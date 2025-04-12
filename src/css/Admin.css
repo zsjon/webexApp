@@ -1,0 +1,38 @@
+.admin-wrapper {
+    padding: 2rem;
+    max-width: 600px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+
+.admin-header {
+    height: 70px;
+    background-color: #A6DDF4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 10%;
+    object-fit: cover;
+}
+
+.admin-title {
+    text-align: center;
+}
+
+.admin-subtitle {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.admin-box {
+    background-color: #f8f8f8;
+    padding: 1rem;
+    border-radius: 8px;
+}
