@@ -125,6 +125,7 @@ function User({ user }) {
                     ? '✅ 반납 알림이 성공적으로 전송되었습니다!'
                     : '✅ 조정 내용이 성공적으로 전송되었습니다!');
             } else {
+                setModalMessage('반납에 실패하였습니다.');
                 throw new Error();
             }
 
