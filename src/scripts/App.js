@@ -66,7 +66,7 @@ function App() {
             const webex = new window.Webex.EmbeddedAppSdk();
             await webex.ready();
             const { spaceId } = await webex.getSpaceId();
-            const res = await fetch(`https://98bd-222-107-173-96.ngrok-free.app/api/requests?roomId=${spaceId}`);
+            const res = await fetch(`https://0ff8-210-119-237-101.ngrok-free.app/api/requests?roomId=${spaceId}`);
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -113,7 +113,7 @@ function App() {
                 formData.append('lat', location.latitude);
                 formData.append('lng', location.longitude);
 
-                const res = await fetch('https://98bd-222-107-173-96.ngrok-free.app/api/return', {
+                const res = await fetch('https://0ff8-210-119-237-101.ngrok-free.app/api/return', {
                     method: 'POST',
                     body: formData
                 });
@@ -138,7 +138,7 @@ function App() {
                 // 필요한 경우, message 필드를 추가할 수 있습니다.
                 // formData.append('message', message);
 
-                const res = await fetch('https://98bd-222-107-173-96.ngrok-free.app/api/pm-adjusted', {
+                const res = await fetch('https://0ff8-210-119-237-101.ngrok-free.app/api/pm-adjusted', {
                     method: 'POST',
                     body: formData
                 });

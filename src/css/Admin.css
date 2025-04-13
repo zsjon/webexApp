@@ -1,38 +1,83 @@
-.admin-wrapper {
-    padding: 2rem;
-    max-width: 600px;
-    margin: auto;
-    font-family: Arial, sans-serif;
-}
-
-.admin-header {
-    height: 70px;
-    background-color: #A6DDF4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.admin-logo {
-    width: 64px;
-    height: 64px;
-    border-radius: 10%;
-    object-fit: cover;
-}
+/*.admin-wrapper {*/
+/*    padding: 2rem;*/
+/*    max-width: 800px;*/
+/*    margin: auto;*/
+/*    font-family: Arial, sans-serif;*/
+/*}*/
 
 .admin-title {
-    text-align: center;
-}
-
-.admin-subtitle {
     text-align: center;
     margin-bottom: 1rem;
 }
 
-.admin-box {
-    background-color: #f8f8f8;
-    padding: 1rem;
+.admin-map {
+    height: 400px;
+    margin-bottom: 1rem;
+}
+
+.admin-button-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* 테이블 컨테이너 */
+.admin-table-wrapper {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
     border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table thead {
+    background-color: #f0f0f0;
+}
+
+.admin-table th {
+    padding: 12px;
+    border-bottom: 2px solid #ccc;
+    text-align: center;
+    font-size: 15px;
+}
+
+.admin-table tbody tr {
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.admin-table tbody tr td {
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.meraki-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 160px;
+    height: 50px;
+    border-radius: 8px;
+    background-color: #429D14;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.meraki-button:hover {
+    background-color: #367A11;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
