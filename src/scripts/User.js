@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // 데모용: Webex Bot Token (실제 환경에서는 클라이언트에 직접 노출하면 안 됩니다)
-const BOT_TOKEN = 'YOUR_WEBEX_BOT_TOKEN_HERE';
+const BOT_TOKEN = process.env.WEBEX_BOT_TOKEN;
 
 function User({ user }) {
     const [mode, setMode] = useState('return');
