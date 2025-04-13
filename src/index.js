@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const renderUserApp = (user) => {
     root.render(
-        <BrowserRouter basename="/kicksco_embedded_app">
+        <BrowserRouter>
             <Routes>
                 <Route path="/" element={<User user={user} />} />
                 <Route path="/detail" element={<UserDetail />} />
