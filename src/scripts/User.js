@@ -134,7 +134,7 @@ function User({ user }) {
             formData.append('lng', location.longitude);
 
             const url = mode === 'return'
-                ? 'http://192.168.1.5:8000/readjust/'
+                ? 'http://192.168.1.5:8000/reward/'
                 : 'https://dc7c-58-230-197-51.ngrok-free.app/api/pm-adjusted';
 
             const res = await fetch(url, {
