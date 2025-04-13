@@ -62,7 +62,7 @@ function User({ user }) {
             const webex = new window.Webex.EmbeddedAppSdk();
             await webex.ready();
             const { spaceId } = await webex.getSpaceId();
-            const res = await fetch(`https://dc7c-58-230-197-51.ngrok-free.app/api/requests?roomId=${spaceId}`);
+            const res = await fetch(`https://0ff8-210-119-237-101.ngrok-free.app/api/requests?roomId=${spaceId}`);
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -135,7 +135,7 @@ function User({ user }) {
 
             const url = mode === 'return'
                 ? 'http://192.168.1.5:8000/reward/'
-                : 'https://dc7c-58-230-197-51.ngrok-free.app/api/pm-adjusted';
+                : 'https://0ff8-210-119-237-101.ngrok-free.app/api/pm-adjusted';
 
             const res = await fetch(url, {
                 method: 'POST',
