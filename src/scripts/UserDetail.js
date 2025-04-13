@@ -56,7 +56,7 @@ function UserDetail() {
                         backgroundColor: '#007bff',
                         color: '#fff',
                         border: 'none',
-                        borderRadius: '4px',
+                        borderRadius: '5px',
                         fontWeight: 'bold',
                         cursor: 'pointer'
                     }}
