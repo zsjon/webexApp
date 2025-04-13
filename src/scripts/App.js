@@ -29,7 +29,7 @@ function App() {
                         alert('Webex 사용자 정보를 불러오지 못했습니다.');
                     });
             }
-        }, 100);
+        }, 300);
     }, []);
 
     // 위치 정보 가져오기 (Promise 반환)
@@ -59,7 +59,7 @@ function App() {
 
     // 요청 목록 주기적 조회
     useEffect(() => {
-        const interval = setInterval(fetchRequests, 10000);
+        const interval = setInterval(fetchRequests, 1000);
         return () => clearInterval(interval);
     }, []);
 
