@@ -1,9 +1,9 @@
-/*.admin-wrapper {*/
-/*    padding: 2rem;*/
-/*    max-width: 800px;*/
-/*    margin: auto;*/
-/*    font-family: Arial, sans-serif;*/
-/*}*/
+.admin-wrapper {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
 
 .admin-title {
     text-align: center;
