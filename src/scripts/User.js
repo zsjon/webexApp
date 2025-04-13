@@ -4,7 +4,7 @@ import Webcam from 'react-webcam';
 import '../css/User.css';
 
 // 데모용: Webex Bot Token (실제 환경에서는 안전하게 관리할 것)
-const BOT_TOKEN = 'YOUR_WEBEX_BOT_TOKEN_HERE';
+const BOT_TOKEN = process.env.WEBEX_BOT_TOKEN;
 
 function User({ user }) {
     const [mode, setMode] = useState('return');

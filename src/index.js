@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const renderUserApp = (user) => {
     root.render(
-        <BrowserRouter basename="/kicksco_embedded_app">
+        <BrowserRouter>
             <Routes>
                 <Route path="/" element={<User user={user} />} />
                 <Route path="/detail" element={<UserDetail />} />
@@ -30,7 +30,7 @@ const init = async () => {
             const user = await webex.getUser();
             console.log(user)
             // 관리자
-            if (user.email === 'admin@cho010105-6xnw.wbx.ai') {
+            if (user.email === 'cho010105@gachon.ac.kr') {
                 return renderAdminApp(user);
             }
 
