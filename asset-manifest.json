@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/kicksco_embedded_app/static/css/main.1b5977dc.css",
-    "main.js": "/kicksco_embedded_app/static/js/main.e5827ed1.js",
+    "main.css": "/kicksco_embedded_app/static/css/main.92327c32.css",
+    "main.js": "/kicksco_embedded_app/static/js/main.49344d6e.js",
     "index.html": "/kicksco_embedded_app/index.html",
-    "main.1b5977dc.css.map": "/kicksco_embedded_app/static/css/main.1b5977dc.css.map",
-    "main.e5827ed1.js.map": "/kicksco_embedded_app/static/js/main.e5827ed1.js.map"
+    "main.92327c32.css.map": "/kicksco_embedded_app/static/css/main.92327c32.css.map",
+    "main.49344d6e.js.map": "/kicksco_embedded_app/static/js/main.49344d6e.js.map"
   },
   "entrypoints": [
-    "static/css/main.1b5977dc.css",
-    "static/js/main.e5827ed1.js"
+    "static/css/main.92327c32.css",
+    "static/js/main.49344d6e.js"
   ]
 }
