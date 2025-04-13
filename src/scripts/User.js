@@ -7,6 +7,7 @@ function User({ user }) {
     const [requests, setRequests] = useState([]);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
+    const streamRef = useRef(null);
 
     const email = user?.email || '';
 
@@ -74,6 +75,7 @@ function User({ user }) {
             video: { facingMode: { exact: 'environment' } }
         })
             .then((stream) => {
+                streamRef.current = stream;
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
                 }
@@ -94,21 +96,21 @@ function User({ user }) {
         canvas.toBlob((blob) => {
             const file = new File([blob], 'captured.jpg', { type: 'image/jpeg' });
             setSelectedImage(file);
-
-            if (video.srcObject) {
-                const tracks = video.srcObject.getTracks();
-                tracks.forEach((track) => track.stop());
-                video.srcObject = null;
-            }
         }, 'image/jpeg');
     };
 
     const handleRetake = () => {
         setSelectedImage(null);
+        if (streamRef.current) {
+            const tracks = streamRef.current.getTracks();
+            tracks.forEach(track => track.stop());
+            streamRef.current = null;
+        }
         navigator.mediaDevices.getUserMedia({
             video: { facingMode: { exact: 'environment' } }
         })
             .then((stream) => {
+                streamRef.current = stream;
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
                 }
@@ -165,7 +167,8 @@ function User({ user }) {
             <div style={{ marginBottom: '1rem' }}>
                 {!selectedImage && (
                     <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%' }}>
-                        <video ref={videoRef} autoPlay playsInline muted style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', border: '1px solid #ccc' }} />
+                        <canvas ref={canvasRef} width="320" height="180" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: '8px', border: '1px solid #ccc', backgroundColor: '#000' }} />
+                        <video ref={videoRef} autoPlay playsInline muted style={{ display: 'none' }} />
                         <img src="/kicksco_embedded_app/img.png" onClick={handleCapture} style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#fff', cursor: 'pointer', border: '2px solid #ddd', boxShadow: '0 2px 6px rgba(0,0,0,0.2)' }} />
                     </div>
                 )}
@@ -177,8 +180,6 @@ function User({ user }) {
                         <button onClick={handleRetake} style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>재촬영</button>
                     </div>
                 )}
-
-                <canvas ref={canvasRef} width="320" height="180" style={{ display: 'none' }} />
             </div>
 
             {mode === 'adjust' && requests.length > 0 && (
