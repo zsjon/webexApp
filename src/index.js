@@ -65,9 +65,9 @@ const init = async () => {
 
 
             if (user.email === 'admin@cho010105-6xnw.wbx.ai') {
-                root.render(<AdminApp user={user} />);
-            } else {
                 root.render(<UserApp user={user} />);
+            } else {
+                root.render(<AdminApp user={user} />);
             }
         } catch (e) {
             console.error('Webex 초기화 실패:', e);
