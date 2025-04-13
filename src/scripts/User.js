@@ -1,13 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import Webcam from 'react-webcam';
 
 function User({ user }) {
     const [mode, setMode] = useState('return');
     const [selectedImage, setSelectedImage] = useState(null);
     const [coords, setCoords] = useState({ latitude: '', longitude: '' });
     const [requests, setRequests] = useState([]);
-    const videoRef = useRef(null);
-    const canvasRef = useRef(null);
-    const streamRef = useRef(null);
+    const webcamRef = useRef(null);
 
     const email = user?.email || '';
 
@@ -35,24 +34,13 @@ function User({ user }) {
         });
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (mode === 'adjust') {
-            navigator.geolocation.getCurrentPosition(
-                position => {
-                    setCoords({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    });
-                },
-                err => {
-                    console.error('❌ 위치 정보 오류:', err);
-                    alert('위치 정보를 가져오지 못했습니다.');
-                }
-            );
+            getCurrentLocation();
         }
     }, [mode]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         const interval = setInterval(fetchRequests, 10000);
         return () => clearInterval(interval);
     }, []);
@@ -62,7 +50,7 @@ function User({ user }) {
             const webex = new window.Webex.EmbeddedAppSdk();
             await webex.ready();
             const { spaceId } = await webex.getSpaceId();
-            const res = await fetch(`https://0ff8-210-119-237-101.ngrok-free.app/api/requests?roomId=${spaceId}`);
+            const res = await fetch(`https://dc7c-58-230-197-51.ngrok-free.app/api/requests?roomId=${spaceId}`);
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -70,55 +58,24 @@ function User({ user }) {
         }
     };
 
-    useEffect(() => {
-        navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { exact: 'environment' } }
-        })
-            .then((stream) => {
-                streamRef.current = stream;
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-            })
-            .catch((err) => {
-                console.error("카메라 접근 실패:", err);
-                alert("카메라를 사용할 수 없습니다.");
-            });
-    }, []);
-
     const handleCapture = () => {
-        const video = videoRef.current;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        canvas.toBlob((blob) => {
-            const file = new File([blob], 'captured.jpg', { type: 'image/jpeg' });
+        const screenshot = webcamRef.current.getScreenshot();
+        if (screenshot) {
+            const byteString = atob(screenshot.split(',')[1]);
+            const mimeString = screenshot.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([ab], { type: mimeString });
+            const file = new File([blob], 'captured.jpg', { type: mimeString });
             setSelectedImage(file);
-        }, 'image/jpeg');
+        }
     };
 
     const handleRetake = () => {
         setSelectedImage(null);
-        if (streamRef.current) {
-            const tracks = streamRef.current.getTracks();
-            tracks.forEach(track => track.stop());
-            streamRef.current = null;
-        }
-        navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { exact: 'environment' } }
-        })
-            .then((stream) => {
-                streamRef.current = stream;
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-            })
-            .catch((err) => {
-                console.error("카메라 접근 실패:", err);
-                alert("카메라를 다시 시작할 수 없습니다.");
-            });
     };
 
     const handleSubmit = async () => {
@@ -135,7 +92,7 @@ function User({ user }) {
 
             const url = mode === 'return'
                 ? 'http://192.168.1.5:8000/reward/'
-                : 'https://0ff8-210-119-237-101.ngrok-free.app/api/pm-adjusted';
+                : 'https://dc7c-58-230-197-51.ngrok-free.app/api/pm-adjusted';
 
             const res = await fetch(url, {
                 method: 'POST',
@@ -167,8 +124,17 @@ function User({ user }) {
             <div style={{ marginBottom: '1rem' }}>
                 {!selectedImage && (
                     <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%' }}>
-                        <canvas ref={canvasRef} width="320" height="180" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: '8px', border: '1px solid #ccc', backgroundColor: '#000' }} />
-                        <video ref={videoRef} autoPlay playsInline muted style={{ display: 'none' }} />
+                        <Webcam
+                            ref={webcamRef}
+                            audio={false}
+                            screenshotFormat="image/jpeg"
+                            videoConstraints={{
+                                facingMode: 'environment',
+                                width: { ideal: 1280 },
+                                height: { ideal: 720 }
+                            }}
+                            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', border: '1px solid #ccc' }}
+                        />
                         <img src="/kicksco_embedded_app/img.png" onClick={handleCapture} style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#fff', cursor: 'pointer', border: '2px solid #ddd', boxShadow: '0 2px 6px rgba(0,0,0,0.2)' }} />
                     </div>
                 )}
