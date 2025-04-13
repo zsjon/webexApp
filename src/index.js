@@ -64,7 +64,7 @@ const init = async () => {
                 });
 
 
-            if (user.email === 'cho010105@gachon.ac.kr') {
+            if (user.email === 'admin@cho010105-6xnw.wbx.ai') {
                 root.render(<UserApp user={user} />);
             } else {
                 root.render(<AdminApp user={user} />);
