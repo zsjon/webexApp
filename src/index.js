@@ -18,9 +18,9 @@ const renderUserApp = (user) => {
     );
 };
 
-const renderAdminApp = (user) => {
-    root.render(<AdminApp user={user} />);
-};
+// const renderAdminApp = (user) => {
+//     root.render(<AdminApp user={user} />);
+// };
 
 const init = async () => {
     if (window.Webex?.EmbeddedAppSdk) {
