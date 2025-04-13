@@ -30,7 +30,7 @@ const init = async () => {
             const user = await webex.getUser();
             console.log(user)
             // 관리자
-            if (user.email === 'admin@cho010105-6xnw.wbx.a') {
+            if (user.email === 'admin@cho010105-6xnw.wbx.ai') {
                 return renderAdminApp(user);
             }
 
