@@ -119,8 +119,7 @@ function Admin() {
                                     <>
                                         <th>기기 번호</th>
                                         <th>재위치 여부</th>
-                                        {/*<th>위반 사진</th>*/}
-                                        {/*<th>재위치 사진</th>*/}
+                                        <th>주차 현황</th>
                                         <th>사진 보기</th>
                                         <th>감지 시각</th>
                                     </>
@@ -142,6 +141,7 @@ function Admin() {
                                             <td>{item.adjusted ? '✅' : '❌'}</td>
                                             {/*<td><img src={item.violationImageUrl} alt="위반사진" width="100" /></td>*/}
                                             {/*<td><img src={item.adjustedImageUrl} alt="재위치사진" width="100" /></td>*/}
+                                            <td>정상 주차</td>
                                             <td><button>사진 보기</button></td>
                                             <td>{new Date(item.timestamp).toLocaleString()}</td>
                                         </>
