@@ -11,9 +11,9 @@ function User({ user }) {
     const webcamRef = useRef(null);
     const [modalMessage, setModalMessage] = useState('');
     const navigate = useNavigate();
-
     const email = user?.email || '';
-    const reward = user?.reward;
+    const [reward, setReward] = useState(user?.reward ?? 0);
+
     const getCurrentLocation = () => {
         return new Promise((resolve, reject) => {
             if (!navigator.geolocation) {
@@ -101,8 +101,8 @@ function User({ user }) {
                 timestamp: timestamp,
                 // lat: parseFloat(location.latitude),
                 // lng: parseFloat(location.longitude)
-                lat : parseFloat("33.3"),
-                lng : parseFloat("127.7")
+                lat : parseFloat("333"),
+                lng : parseFloat("333")
             };
             console.log(body.timestamp);
             console.log(body.lat+ "  " + body.lng);
@@ -112,15 +112,23 @@ function User({ user }) {
             });
             const data = await res.json();
             console.log(data);
-
+            setReward(data.reward);
             if (data.message === "No historical data for the nearest camera") {
                 setModalMessage("📡 주변 카메라에서 데이터를 찾을 수 없습니다.");
                 return;
             }
             console.log(data.message);
-            if (!res.ok) throw new Error();
 
-            alert(mode === 'return' ? '반납 알림이 전송되었습니다!' : '조정 내용이 전송되었습니다!');
+            if (res.ok) {
+                setReward(data.reward);
+                setModalMessage(mode === 'return'
+                    ? '✅ 반납 알림이 성공적으로 전송되었습니다!'
+                    : '✅ 조정 내용이 성공적으로 전송되었습니다!');
+            } else {
+                throw new Error();
+            }
+
+            //alert(mode === 'return' ? '반납 알림이 전송되었습니다!' : '조정 내용이 전송되었습니다!');
         } catch (err) {
             console.error(err);
             alert(mode === 'return' ? '반납 요청 실패' : '조정 내용 전송 실패');
