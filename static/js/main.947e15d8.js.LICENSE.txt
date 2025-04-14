@@ -3,6 +3,20 @@
  * (c) 2010-2023 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
+/*! exports provided: default */
+
+/*! no static exports found */
+
+/*! react */
+
+/*!******************************!*\
+      !*** ./src/react-webcam.tsx ***!
+      \******************************/
+
+/*!**************************************************************************************!*\
+      !*** external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"} ***!
+      \**************************************************************************************/
+
 /**
  * @license React
  * react-dom-client.production.js
