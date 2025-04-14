@@ -1,21 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Webcam from 'react-webcam';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../css/User.css';
+
+const API_BASE_URL = 'https://noble-tammara-kicksco-97f46231.koyeb.app';
 
 function User({ user }) {
     const [mode, setMode] = useState('return');
     const [selectedImage, setSelectedImage] = useState(null);
     const [coords, setCoords] = useState({ latitude: '', longitude: '' });
     const [requests, setRequests] = useState([]);
+    const [useWebcam, setUseWebcam] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [reward, setReward] = useState(user?.reward ?? 0);
+
+    const webcamRef = useRef(null);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-
+    const navigate = useNavigate();
     const email = user?.email || '';
 
     // 위치 정보 가져오기
     const getCurrentLocation = () => {
         return new Promise((resolve, reject) => {
             if (!navigator.geolocation) {
-                alert('위치 정보 사용이 불가능합니다.');
+                toast.error('위치 정보 사용이 불가능합니다.');
                 return reject(new Error('Geolocation not supported'));
             }
             navigator.geolocation.getCurrentPosition(
@@ -29,28 +40,17 @@ function User({ user }) {
                 },
                 (err) => {
                     console.error('위치 정보 오류:', err);
-                    alert('위치 정보를 가져오지 못했습니다.');
+                    toast.error('위치 정보를 가져오지 못했습니다.');
                     reject(err);
                 }
             );
         });
     };
 
-    // adjust 모드일 때 위치 가져오기
+    // adjust 모드이면 위치 정보 자동 갱신
     useEffect(() => {
         if (mode === 'adjust') {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setCoords({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    });
-                },
-                (err) => {
-                    console.error('❌ 위치 정보 오류:', err);
-                    alert('위치 정보를 가져오지 못했습니다.');
-                }
-            );
+            getCurrentLocation();
         }
     }, [mode]);
 
@@ -65,7 +65,7 @@ function User({ user }) {
             const webex = new window.Webex.EmbeddedAppSdk();
             await webex.ready();
             const { spaceId } = await webex.getSpaceId();
-            const res = await fetch(`https://noble-tammara-kicksco-97f46231.koyeb.app/api/requests?roomId=${spaceId}`);
+            const res = await fetch(`${API_BASE_URL}/api/requests?roomId=${spaceId}`);
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -73,56 +73,33 @@ function User({ user }) {
         }
     };
 
-    // 카메라 스트리밍 시작
-    useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-            })
-            .catch((err) => {
-                console.error("카메라 접근 실패:", err);
-                alert("카메라를 사용할 수 없습니다.");
-            });
-    }, []);
-
+    // 카메라 캡처
     const handleCapture = () => {
-        const video = videoRef.current;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        canvas.toBlob((blob) => {
-            const file = new File([blob], 'captured.jpg', { type: 'image/jpeg' });
-            setSelectedImage(file);
-
-            if (video.srcObject) {
-                const tracks = video.srcObject.getTracks();
-                tracks.forEach((track) => track.stop());
-                video.srcObject = null;
+        const screenshot = webcamRef.current.getScreenshot();
+        if (screenshot) {
+            const byteString = atob(screenshot.split(',')[1]);
+            const mimeString = screenshot.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
             }
-        }, 'image/jpeg');
+            const blob = new Blob([ab], { type: mimeString });
+            const file = new File([blob], 'captured.jpg', { type: mimeString });
+            setSelectedImage(file);
+            setUseWebcam(false);
+        }
     };
 
     const handleRetake = () => {
         setSelectedImage(null);
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-            })
-            .catch((err) => {
-                console.error("카메라 접근 실패:", err);
-                alert("카메라를 다시 시작할 수 없습니다.");
-            });
+        setUseWebcam(false);
     };
 
+    // 데이터 전송 처리 (반납, 위치 조정)
     const handleSubmit = async () => {
-        if (!email) return alert('이메일 정보가 없습니다.');
-        if (!selectedImage) return alert('이미지를 선택해주세요.');
+        if (!email) return toast.error('이메일 정보가 없습니다.');
+        if (!selectedImage) return toast.error('이미지를 선택해주세요.');
 
         try {
             const location = await getCurrentLocation();
@@ -136,31 +113,49 @@ function User({ user }) {
             formData.append('lng', location.longitude);
 
             const url = mode === 'return'
-                ? 'https://noble-tammara-kicksco-97f46231.koyeb.app/api/return'
-                : 'https://noble-tammara-kicksco-97f46231.koyeb.app/api/pm-adjusted';
+                ? `${API_BASE_URL}/api/return`
+                : `${API_BASE_URL}/api/pm-adjusted`;
 
             const res = await fetch(url, {
                 method: 'POST',
                 body: formData
             });
             if (!res.ok) throw new Error();
-
-            alert(mode === 'return' ? '반납 알림이 전송되었습니다!' : '조정 내용이 전송되었습니다!');
+            toast.success(mode === 'return'
+                ? '반납 알림이 전송되었습니다!'
+                : '조정 내용이 전송되었습니다!');
         } catch (err) {
             console.error(err);
-            alert(mode === 'return' ? '반납 요청 실패' : '조정 내용 전송 실패');
+            toast.error(mode === 'return' ? '반납 요청 실패' : '조정 내용 전송 실패');
         }
+    };
+
+    const handleFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) setSelectedImage(file);
     };
 
     return (
         <div className="user-wrapper">
-            <div className="user-header">
+            <ToastContainer />
+
+            <header className="user-header">
                 <img
                     className="user-logo"
                     src="/kicksco_embedded_app/logo.png"
                     alt="KickSco 로고"
                 />
-            </div>
+                <button
+                    className="user-icon-button"
+                    onClick={() => navigate('/detail', { state: { user } })}
+                >
+                    <img
+                        className="user-icon"
+                        src="/kicksco_embedded_app/user_icon.png"
+                        alt="User"
+                    />
+                </button>
+            </header>
 
             <div className="user-info">
                 <div>
@@ -187,8 +182,6 @@ function User({ user }) {
                     <>
                         <video
                             ref={videoRef}
-                            width="320"
-                            height="240"
                             autoPlay
                             playsInline
                             className="video-player"
@@ -209,7 +202,6 @@ function User({ user }) {
                             alt="Captured"
                             className="selected-image"
                         />
-                        <br />
                         <button onClick={handleRetake} className="retake-button">
                             재촬영
                         </button>
