@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import AdminApp from "./scripts/Admin";
 import User from "./scripts/User";
 import UserDetail from "./scripts/UserDetail";
@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const App = ({ user }) => {
     return (
-        <BrowserRouter basename="/kicksco_embedded_app">
+        <HashRouter basename="/kicksco_embedded_app">
             <Routes>
                 {/* 기본 경로: 일반 사용자 */}
                 <Route path="/" element={<User user={user} />} />
@@ -17,10 +17,10 @@ const App = ({ user }) => {
                 <Route path="/admin" element={<AdminApp user={user} />} />
                 {/* 기타 상세 페이지 등 */}
                 <Route path="/detail" element={<UserDetail />} />
-                {/* 기타 알 수 없는 경로는 기본 경로로 리다이렉션 */}
+                {/* 알 수 없는 경로는 기본 경로로 리다이렉션 */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     );
 };
 
@@ -31,7 +31,7 @@ const init = async () => {
             await webex.ready();
             const user = await webex.getUser();
             console.log("Webex 로그인 사용자:", user);
-            // 사용자 정보와 함께 App 컴포넌트를 한 번에 렌더링함
+            // 사용자 정보와 함께 App 컴포넌트를 렌더링
             root.render(<App user={user} />);
         } catch (e) {
             console.error("❌ 초기화 실패:", e);
