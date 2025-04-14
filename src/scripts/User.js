@@ -180,10 +180,15 @@ function User({ user }) {
             <div className="video-container">
                 {!selectedImage && (
                     <>
-                        <video
-                            ref={videoRef}
-                            autoPlay
-                            playsInline
+                        <Webcam
+                            ref={webcamRef}
+                            audio={false}
+                            screenshotFormat="image/jpeg"
+                            videoConstraints={{
+                                facingMode: 'environment',
+                                width: { ideal: 1280 },
+                                height: { ideal: 720 }
+                            }}
                             className="video-player"
                         />
                         <img
