@@ -65,7 +65,7 @@ function User({ user }) {
             const webex = new window.Webex.EmbeddedAppSdk();
             await webex.ready();
             const { spaceId } = await webex.getSpaceId();
-            const res = await fetch(`https://5851-210-119-237-101.ngrok-free.app/api/requests?roomId=${spaceId}`);
+            const res = await fetch(`https://noble-tammara-kicksco-97f46231.koyeb.app/api/requests?roomId=${spaceId}`);
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -136,8 +136,8 @@ function User({ user }) {
             formData.append('lng', location.longitude);
 
             const url = mode === 'return'
-                ? 'https://5851-210-119-237-101.ngrok-free.app/api/return'
-                : 'https://5851-210-119-237-101.ngrok-free.app/api/pm-adjusted';
+                ? 'https://noble-tammara-kicksco-97f46231.koyeb.app/api/return'
+                : 'https://noble-tammara-kicksco-97f46231.koyeb.app/api/pm-adjusted';
 
             const res = await fetch(url, {
                 method: 'POST',
