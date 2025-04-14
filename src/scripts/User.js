@@ -1,7 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Webcam from 'react-webcam';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/User.css';
 
@@ -12,13 +11,10 @@ function User({ user }) {
     const [selectedImage, setSelectedImage] = useState(null);
     const [coords, setCoords] = useState({ latitude: '', longitude: '' });
     const [requests, setRequests] = useState([]);
-    const [useWebcam, setUseWebcam] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [reward, setReward] = useState(user?.reward ?? 0);
 
-    const webcamRef = useRef(null);
-    const videoRef = useRef(null);
-    const canvasRef = useRef(null);
+    const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const email = user?.email || '';
 
@@ -33,7 +29,7 @@ function User({ user }) {
                 (position) => {
                     const location = {
                         latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
+                        longitude: position.coords.longitude,
                     };
                     setCoords(location);
                     resolve(location);
@@ -47,7 +43,7 @@ function User({ user }) {
         });
     };
 
-    // adjust 모드이면 위치 정보 자동 갱신
+    // adjust 모드일 때 위치 정보를 자동 갱신
     useEffect(() => {
         if (mode === 'adjust') {
             getCurrentLocation();
@@ -73,27 +69,15 @@ function User({ user }) {
         }
     };
 
-    // 카메라 캡처
-    const handleCapture = () => {
-        const screenshot = webcamRef.current.getScreenshot();
-        if (screenshot) {
-            const byteString = atob(screenshot.split(',')[1]);
-            const mimeString = screenshot.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-            const blob = new Blob([ab], { type: mimeString });
-            const file = new File([blob], 'captured.jpg', { type: mimeString });
-            setSelectedImage(file);
-            setUseWebcam(false);
-        }
+    // 파일 선택 핸들러 (갤러리 이미지 첨부)
+    const handleFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) setSelectedImage(file);
     };
 
-    const handleRetake = () => {
+    // "취소" 또는 "다른 사진 업로드"
+    const handleCancel = () => {
         setSelectedImage(null);
-        setUseWebcam(false);
     };
 
     // 데이터 전송 처리 (반납, 위치 조정)
@@ -112,33 +96,32 @@ function User({ user }) {
             formData.append('lat', location.latitude);
             formData.append('lng', location.longitude);
 
-            const url = mode === 'return'
-                ? `${API_BASE_URL}/api/return`
-                : `${API_BASE_URL}/api/pm-adjusted`;
+            const url =
+                mode === 'return'
+                    ? `${API_BASE_URL}/api/return`
+                    : `${API_BASE_URL}/api/pm-adjusted`;
 
             const res = await fetch(url, {
                 method: 'POST',
-                body: formData
+                body: formData,
             });
             if (!res.ok) throw new Error();
-            toast.success(mode === 'return'
-                ? '반납 알림이 전송되었습니다!'
-                : '조정 내용이 전송되었습니다!');
+            toast.success(
+                mode === 'return'
+                    ? '반납 알림이 전송되었습니다!'
+                    : '조정 내용이 전송되었습니다!'
+            );
         } catch (err) {
             console.error(err);
             toast.error(mode === 'return' ? '반납 요청 실패' : '조정 내용 전송 실패');
         }
     };
 
-    const handleFileSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) setSelectedImage(file);
-    };
-
     return (
         <div className="user-wrapper">
             <ToastContainer />
 
+            {/* 상단 헤더 영역 */}
             <header className="user-header">
                 <img
                     className="user-logo"
@@ -157,65 +140,68 @@ function User({ user }) {
                 </button>
             </header>
 
+            {/* 사용자 모드 전환 영역 */}
             <div className="user-info">
                 <div>
-                    <label> 사용자 : </label> <span>{email}</span>
+                    <label> 사용자 </label> <span>{email} 님, 환영합니다.</span>
                 </div>
                 <div className="user-mode-buttons">
                     <button
                         onClick={() => setMode('return')}
-                        className={`user-mode-button ${mode === 'return' ? 'active' : 'inactive'}`}
+                        className={`user-mode-button ${
+                            mode === 'return' ? 'active' : 'inactive'
+                        }`}
                     >
                         PM 반납
                     </button>
                     <button
                         onClick={() => setMode('adjust')}
-                        className={`user-mode-button ${mode === 'adjust' ? 'active' : 'inactive'}`}
+                        className={`user-mode-button ${
+                            mode === 'adjust' ? 'active' : 'inactive'
+                        }`}
                     >
                         PM 위치 조정
                     </button>
                 </div>
             </div>
 
-            <div className="video-container">
-                {!selectedImage && (
-                    <>
-                        <Webcam
-                            ref={webcamRef}
-                            audio={false}
-                            screenshotFormat="image/jpeg"
-                            videoConstraints={{
-                                facingMode: 'environment',
-                                width: { ideal: 1280 },
-                                height: { ideal: 720 }
-                            }}
-                            className="video-player"
+            {/* 업로드 영역 */}
+            <div className="upload-container">
+                {!selectedImage ? (
+                    <div
+                        className="drag-drop-box"
+                        onClick={() => fileInputRef.current.click()}
+                    >
+                        <input
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleFileSelect}
                         />
-                        <img
-                            src="/kicksco_embedded_app/img.png"
-                            onClick={handleCapture}
-                            className="capture-button"
-                            alt="캡처"
-                        />
-                    </>
-                )}
-
-                {selectedImage && (
+                        <div className="upload-icon" />
+                        <p className="upload-title">주차 사진 등록</p>
+                        <p className="upload-instruction">
+                            이미지를 등록해주세요. <br />
+                            PM을 주차한 위치가 자세히 보이게 촬영해 주세요.{' '}
+                            {/*<span className="click-here">clicking here</span>.*/}
+                        </p>
+                    </div>
+                ) : (
                     <div className="selected-image-container">
                         <img
                             src={URL.createObjectURL(selectedImage)}
-                            alt="Captured"
+                            alt="Selected"
                             className="selected-image"
                         />
-                        <button onClick={handleRetake} className="retake-button">
-                            재촬영
+                        <button onClick={handleCancel} className="retake-button">
+                            다른 사진 업로드
                         </button>
                     </div>
                 )}
-
-                <canvas ref={canvasRef} width="320" height="240" style={{ display: 'none' }} />
             </div>
 
+            {/* 조정 요청 목록 */}
             {mode === 'adjust' && requests.length > 0 && (
                 <div className="user-request-list">
                     <h4>조정 요청 목록</h4>
@@ -227,6 +213,7 @@ function User({ user }) {
                 </div>
             )}
 
+            {/* 전송 버튼 */}
             <button onClick={handleSubmit} className="user-submit-button">
                 전송
             </button>
