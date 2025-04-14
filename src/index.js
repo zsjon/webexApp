@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const App = ({ user }) => {
     return (
-        <HashRouter basename="/kicksco_embedded_app">
+        <HashRouter>
             <Routes>
                 {/* 기본 경로: 일반 사용자 */}
                 <Route path="/" element={<User user={user} />} />
