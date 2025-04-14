@@ -134,7 +134,7 @@ function User({ user }) {
                 >
                     <img
                         className="user-icon"
-                        src="/kicksco_embedded_app/user_icon.png"
+                        src="/kicksco_embedded_app/user.png"
                         alt="User"
                     />
                 </button>
